@@ -1,0 +1,23 @@
+/**
+ * Add shortcode for displaying combined publish and update dates
+ */
+function display_combined_dates_shortcode() {
+    $published_date_ymd = get_the_date('Y-m-d'); // Get published date in Y-m-d format for comparison
+    $updated_date_ymd = get_the_modified_date('Y-m-d'); // Get modified date in Y-m-d format for comparison
+    
+    // Format published date as per WordPress default (date only)
+    $formatted_publish_date = get_the_date(get_option('date_format'));
+    
+    // Format updated date as per WordPress default (date only)
+    $formatted_update_date = get_the_modified_date(get_option('date_format'));
+    
+    $output = sprintf('<span class="publish-date">Published: %s</span>', $formatted_publish_date);
+    
+    // Only add updated date if it's different day from published date
+    if ($updated_date_ymd > $published_date_ymd) {
+        $output .= sprintf(' <span class="separator"> | </span><span class="updated-date">Updated: %s</span>', $formatted_update_date);
+    }
+    
+    return $output;
+}
+add_shortcode('post_dates', 'display_combined_dates_shortcode');
